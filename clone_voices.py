@@ -22,21 +22,25 @@ VOICES_FILE = Path(__file__).parent / "voices.json"
 
 # Voice metadata: filename (without .mp3) -> display name and context keywords
 VOICE_CONFIG = {
-    "drevnie_rusy": {
-        "name": "Древние Русы (Багиров)",
-        "context": "default",  # used as default Russian voice
+    "bagirov": {
+        "name": "Радислав Багиров",
+        "context": "default",
     },
     "droceslav": {
-        "name": "Дрочеслав",
-        "context": "battle,fight,warrior,combat,attack",
+        "name": "Дрочеслав сын Сергея",
+        "context": "battle",
     },
     "vseslav": {
         "name": "Всеслав Чародей",
-        "context": "magic,spell,wisdom,ancient,knowledge",
+        "context": "magic",
     },
-    "yashcher": {
+    "ящер": {
         "name": "Хитрый Ящер",
-        "context": "error,bug,fail,warning,problem,issue",
+        "context": "error",
+    },
+    "podliy_yashcher": {
+        "name": "Подлый Ящер",
+        "context": "sneaky",
     },
 }
 

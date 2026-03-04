@@ -1,5 +1,5 @@
 .env
-samples/
+samples/древнийрус*
 voices.json
 voice.pid
 voice.stop
