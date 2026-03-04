@@ -25,7 +25,10 @@ def install():
     print("\n2. Checking .env...")
     env_file = Path(__file__).parent / ".env"
     if not env_file.exists():
-        key = input("   Enter your ElevenLabs API key (or press Enter to skip): ").strip()
+        try:
+            key = input("   Enter your ElevenLabs API key (or press Enter to skip): ").strip()
+        except EOFError:
+            key = ""
         if key:
             env_file.write_text(f"ELEVENLABS_API_KEY={key}\n")
             print("   Saved to .env")
@@ -38,9 +41,9 @@ def install():
 
     if CODEX_CONFIG.exists():
         content = CODEX_CONFIG.read_text(encoding="utf-8")
-        if "codex_hook.py" in content or "codex-voice" in content:
+        if "codex_hook.py" in content:
             print("   Hook already configured.")
-        elif content.startswith("notify"):
+        elif any(line.strip().startswith("notify") for line in content.splitlines()):
             print("   WARNING: Codex already has a notify hook.")
             print(f"   Add manually: {NOTIFY_LINE}")
         else:
@@ -66,7 +69,7 @@ def uninstall():
     print("Removing codex-voice hook...")
     if CODEX_CONFIG.exists():
         lines = CODEX_CONFIG.read_text(encoding="utf-8").splitlines()
-        lines = [l for l in lines if "codex_hook.py" not in l and "codex-voice" not in l]
+        lines = [l for l in lines if "codex_hook.py" not in l]
         CODEX_CONFIG.write_text("\n".join(lines) + "\n", encoding="utf-8")
         print("Hook removed from config.toml")
     else:
