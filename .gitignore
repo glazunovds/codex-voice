@@ -1,0 +1,8 @@
+.env
+samples/
+voices.json
+voice.pid
+voice.stop
+voice.mute
+__pycache__/
+*.pyc
