@@ -33,8 +33,14 @@ def install():
             env_file.write_text(f"ELEVENLABS_API_KEY={key}\n")
             print("   Saved to .env")
         else:
-            print("   Skipped. Voice will use free edge-tts fallback.")
-            print("   To add later: echo ELEVENLABS_API_KEY=sk_xxx > .env")
+            print("   Skipped. Voice will use free edge-tts fallback (no meme voices).")
+            print("")
+            print("   To use meme voices (Багиров, Дрочеслав, Ящеры):")
+            print("   1. Get API key: https://elevenlabs.io/app/settings/api-keys")
+            print("   2. Copy .env.example to .env and add your key:")
+            print(f"      cp .env.example .env")
+            print("   3. Clone voices from included samples:")
+            print("      python clone_voices.py")
 
     print("\n3. Configuring Codex CLI hook...")
     CODEX_CONFIG.parent.mkdir(parents=True, exist_ok=True)
@@ -59,8 +65,12 @@ def install():
     if voices_file.exists():
         print("   Voice clones found.")
     else:
-        print("   No voices.json — using edge-tts fallback.")
-        print("   To set up cloned voices: add samples/ and run python clone_voices.py")
+        print("   No voices.json — using edge-tts fallback (no meme voices).")
+        has_env = (Path(__file__).parent / ".env").exists()
+        if has_env:
+            print("   Voice samples are included! Run: python clone_voices.py")
+        else:
+            print("   Set up .env with ElevenLabs key first, then run: python clone_voices.py")
 
     if sys.platform != "win32":
         print("\n5. Checking audio player...")
