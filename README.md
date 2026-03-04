@@ -12,30 +12,40 @@ Each sentence is voiced by a different character based on context:
 | **Хитрый Ящер** | Errors — bugs, crashes, exceptions, test failures |
 | **Подлый Ящер** | Sneaky issues — warnings, deprecations, security, tech debt |
 
-## Quick setup
-
-### 1. Install dependencies
+## Quick setup (automated)
 
 ```bash
-pip install elevenlabs edge-tts imageio-ffmpeg
+git clone https://github.com/glazunovds/codex-voice.git
+cd codex-voice
+python setup.py
 ```
 
-### 2. Clone the repo
+This will:
+1. Install Python dependencies
+2. Prompt for your ElevenLabs API key (optional — skips to free edge-tts fallback)
+3. Auto-configure the `notify` hook in `~/.codex/config.toml`
+4. Check for `voices.json` (cloned voices)
+5. On Linux/macOS: check for an audio player (`mpv`, `ffplay`, or `paplay`)
 
-```bash
-git clone <repo-url> /path/to/codex-voice
-cd /path/to/codex-voice
-```
+To uninstall: `python setup.py --uninstall`
 
-### 3. Set up ElevenLabs API key
+## Platform support
+
+| Platform | Audio backend | Notes |
+|---|---|---|
+| **Windows** | MCI (built-in) | No extra software needed |
+| **Linux** | mpv / ffplay / paplay | Install one: `sudo apt install mpv` |
+| **macOS** | mpv / ffplay | Install via: `brew install mpv` |
+
+## Manual setup
+
+### 1. Create voice clones (optional)
 
 Get a key from https://elevenlabs.io/app/settings/api-keys (Starter plan $5/mo required for voice cloning).
 
 ```bash
 echo "ELEVENLABS_API_KEY=sk_your_key_here" > .env
 ```
-
-### 4. Create voice clones
 
 You need ~30 second voice samples for each character. Get them from:
 - [SteosVoice Telegram bot](https://cybervoice.io/ru/voices/rusy-protiv-yashcherov.html) — generate from text prompts
@@ -59,7 +69,7 @@ python clone_voices.py
 
 This creates `voices.json` with ElevenLabs voice IDs.
 
-### 5. Hook into Codex CLI
+### 2. Manual hook setup (if not using setup.py)
 
 Add to `~/.codex/config.toml`:
 
@@ -68,24 +78,6 @@ notify = ["python3", "/path/to/codex-voice/codex_hook.py"]
 ```
 
 Done! Codex will now voice every Russian response.
-
-## Agent setup (automated)
-
-If you're an AI agent setting this up, run these commands:
-
-```bash
-# Install deps
-pip install elevenlabs edge-tts imageio-ffmpeg
-
-# Set API key
-echo "ELEVENLABS_API_KEY=sk_xxx" > /path/to/codex-voice/.env
-
-# Hook into Codex (add to first line of config)
-# In ~/.codex/config.toml add:
-# notify = ["python3", "/path/to/codex-voice/codex_hook.py"]
-```
-
-Voice samples and cloning must be done manually (requires human to select audio clips).
 
 ## Voice controls
 
@@ -123,6 +115,7 @@ Without ElevenLabs (no API key / no `voices.json`), falls back to **edge-tts** w
 ```
 codex-voice/
 ├── codex_hook.py      # Main Codex notify hook
+├── setup.py           # One-command install/uninstall
 ├── clone_voices.py    # Clone voices on ElevenLabs from samples/
 ├── ctl.py             # Voice control (stop/mute/unmute/status)
 ├── voices.json        # Voice IDs and context mapping (generated)
