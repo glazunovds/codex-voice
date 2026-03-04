@@ -271,8 +271,13 @@ def play_audio(path: str):
         winmm.mciSendStringW(f'play {alias} wait', None, 0, 0)
         winmm.mciSendStringW(f'close {alias}', None, 0, 0)
     else:
-        for player in ["mpv --no-video", "ffplay -nodisp -autoexit", "aplay"]:
-            cmd = player.split() + [path]
+        vol_pct = int(VOLUME * 100)
+        players = [
+            ["mpv", "--no-video", f"--volume={vol_pct}", path],
+            ["ffplay", "-nodisp", "-autoexit", "-volume", str(vol_pct), path],
+            ["paplay", f"--volume={int(VOLUME * 65536)}", path],
+        ]
+        for cmd in players:
             try:
                 subprocess.run(cmd, check=True, capture_output=True)
                 break

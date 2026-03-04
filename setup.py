@@ -62,6 +62,20 @@ def install():
         print("   No voices.json — using edge-tts fallback.")
         print("   To set up cloned voices: add samples/ and run python clone_voices.py")
 
+    if sys.platform != "win32":
+        print("\n5. Checking audio player...")
+        import shutil
+        found = None
+        for player in ["mpv", "ffplay", "paplay"]:
+            if shutil.which(player):
+                found = player
+                break
+        if found:
+            print(f"   Found: {found}")
+        else:
+            print("   WARNING: No audio player found (mpv, ffplay, or paplay).")
+            print("   Install one: sudo apt install mpv  (or ffmpeg for ffplay)")
+
     print("\nDone! Restart Codex CLI to activate voice.")
 
 
